@@ -74,6 +74,7 @@ if (!(Test-Path $OutputPath\Program.cs -PathType leaf)) {
 }
 
 Copy-Item -Path .\template\.gitignore -Destination $OutputPath\
+Copy-Item -Path .\template\extract_script.ps1 -Destination $OutputPath\
 
 if (!(Test-Path $OutputPath\thumb.png -PathType leaf)) {
     Copy-Item -Path .\template\thumb.png -Destination $OutputPath\
