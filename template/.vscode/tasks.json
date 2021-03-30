@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build: debug",
+            "type": "shell",
+            "command": "./extract_script.ps1 -Debugging $true ; ./check_size.ps1 ; Copy-Item -Path ./thumb.png -Destination ../",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "build: release",
+            "type": "shell",
+            "command": "./extract_script.ps1 -Debugging $false ; ./check_size.ps1 ; Copy-Item -Path ./thumb.png -Destination ../",
+            "problemMatcher": [],
+            "group": "build"
+        }
+    ]
+}

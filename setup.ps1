@@ -82,6 +82,9 @@ if (!(Test-Path $OutputPath\thumb.png -PathType leaf)) {
     Write-Host "WARNING: $OutputPath\thumb.png already exists and will not be overwritten." -ForegroundColor Yellow
 }
 
+mkdir -Path $OutputPath\.vscode -Force
+Copy-Item -Path .\template\.vscode\tasks.json -Destination $OutputPath\.vscode\
+
 Set-Location -Path $OutputPath 
 # Create relevant solution and project files
 dotnet new sln -n ${ProjectName} --force
