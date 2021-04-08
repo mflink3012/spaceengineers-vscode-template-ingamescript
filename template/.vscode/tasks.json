@@ -4,7 +4,7 @@
         {
             "label": "build: debug",
             "type": "shell",
-            "command": "./extract_script.ps1 -Debugging $true ; ./check_size.ps1 ; Copy-Item -Path ./thumb.png -Destination ../",
+            "command": "New-Item -Path ${config:project.output.script.dir} -ItemType Directory -Force ; ./extract_script.ps1 -Debugging $true ; if ($?) { ./check_size.ps1 ; if ($?) { Copy-Item -Path ../Script.cs,./thumb.png -Destination ${config:project.output.script.dir} } }",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -14,7 +14,7 @@
         {
             "label": "build: release",
             "type": "shell",
-            "command": "./extract_script.ps1 -Debugging $false ; ./check_size.ps1 ; Copy-Item -Path ./thumb.png -Destination ../",
+            "command": "New-Item -Path ${config:project.output.script.dir} -ItemType Directory -Force ; ./extract_script.ps1 -Debugging $false ; if ($?) { ./check_size.ps1 ; if ($?) { Copy-Item -Path ../Script.cs,./thumb.png -Destination ${config:project.output.script.dir} } }",
             "problemMatcher": [],
             "group": "build"
         }
