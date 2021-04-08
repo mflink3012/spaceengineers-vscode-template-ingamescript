@@ -22,33 +22,33 @@ if ($null -eq $SpaceEngineersBinPath -or $SpaceEngineersBinPath.Length -eq 0) {
 
         if ($null -eq $SpaceEngineersBinPath -or $SpaceEngineersBinPath.Length -eq 0) {
             [string] $default = "${env:ProgramFiles(x86)}\Steam\steamapps\common\SpaceEngineers\Bin64"
-            $SpaceEngineersBinPath = Show-Folder-Selection-Dialog -Description "Select the binary directory of SpaceEngineers`nDefault: ${default}" -SelectedPath $default
+            $SpaceEngineersBinPath = Show-Folder-Selection-Dialog -Description "Select the binary directory of SpaceEngineers`nDefault: $default" -SelectedPath $default
             Remove-Variable -Name default
         }
 
         if ($null -eq $OutputPath -or $OutputPath.Length -eq 0) {
             [string] $default = "${env:APPDATA}\SpaceEngineers\IngameScripts\local"
-            $OutputPath = Show-Folder-Selection-Dialog -Description "Select the path to the output folder`nDefault: ${default}" -SelectedPath $default
+            $OutputPath = Show-Folder-Selection-Dialog -Description "Select the path to the output folder`nDefault: $default" -SelectedPath $default
             Remove-Variable -Name default
         }
     }
 }
 
 Write-Host "Selected game binary folder: '$SpaceEngineersBinPath'"
-Write-Host "Selected output folder: '${OutputPath}'"
+Write-Host "Selected output folder: '$OutputPath'"
 
 Set-Content -Path .\settings.ps1 -Value "`$SpaceEngineersBinPath = `"$SpaceEngineersBinPath`"`n`$OutputPath = `"$OutputPath`""
 
 while ($ProjectName.Length -eq 0) {
     $ProjectName = Read-Host -Prompt "Input the project name"
 }
-Write-Host "Selected project name: '${ProjectName}'"
+Write-Host "Selected project name: '$ProjectName'"
 
 $OutputPath = "${OutputPath}\${ProjectName}\src"
-Write-Host "Final output path: ${OutputPath}"
+Write-Host "Final output path: $OutputPath"
 
 # Create solution directory and change to it
-mkdir -Path $OutputPath -Force
+New-Item -Path $OutputPath -ItemType Directory -Force
 
 $csproj = (Get-Content -Path .\template\SpaceEngineers.csproj -Raw) -replace 'SpaceEngineersBinPath',$SpaceEngineersBinPath
 Set-Content -Path $OutputPath\SpaceEngineers.csproj -Value $csproj
@@ -76,6 +76,8 @@ if (!(Test-Path $OutputPath\Program.cs -PathType leaf)) {
 Copy-Item -Path .\template\.gitignore -Destination $OutputPath\
 Copy-Item -Path .\template\check_size.ps1 -Destination $OutputPath\
 Copy-Item -Path .\template\extract_script.ps1 -Destination $OutputPath\
+Copy-Item -Path .\template\modinfo.sbmi.xml -Destination $OutputPath\
+Copy-Item -Path .\template\README.md -Destination $OutputPath\
 
 if (!(Test-Path $OutputPath\thumb.png -PathType leaf)) {
     Copy-Item -Path .\template\thumb.png -Destination $OutputPath\
@@ -85,6 +87,10 @@ if (!(Test-Path $OutputPath\thumb.png -PathType leaf)) {
 
 mkdir -Path $OutputPath\.vscode -Force
 Copy-Item -Path .\template\.vscode\tasks.json -Destination $OutputPath\.vscode\
+
+[string] $settingsJson = (Get-Content -Path .\template\.vscode\settings.json -Raw) -replace 'ProjectName',$ProjectName
+Set-Content -Path $OutputPath\.vscode\settings.json -Value $settingsJson
+Remove-Variable -Name settingsJson
 
 Set-Location -Path $OutputPath 
 # Create relevant solution and project files
