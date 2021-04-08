@@ -1,0 +1,4 @@
+{
+    "project.name": "ProjectName",
+    "project.output.script.dir": "${env:APPDATA}/SpaceEngineers/IngameScripts/local/ProjectName/"
+}
